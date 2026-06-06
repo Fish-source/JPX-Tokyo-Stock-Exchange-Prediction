@@ -1,0 +1,6 @@
+jpx-tokyo-stock-exchange-prediction/
+output/features/
+output/submissions/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc

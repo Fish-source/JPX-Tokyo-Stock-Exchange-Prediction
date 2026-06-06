@@ -1,3 +1,6 @@
+# If your data directory is not under the project root, uncomment and set:
+# import os; os.environ['JPX_DATA_DIR'] = r'C:\path\to\jpx-tokyo-stock-exchange-prediction'
+
 import numpy as np
 import pandas as pd
 from src.data.loader import load_merged

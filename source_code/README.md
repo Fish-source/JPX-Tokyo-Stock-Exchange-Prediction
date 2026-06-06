@@ -14,12 +14,13 @@ pip install -r requirements.txt
 ## Data Preparation
 
 1. Download the competition dataset from [Kaggle](https://www.kaggle.com/competitions/jpx-tokyo-stock-exchange-prediction/data)
-2. Extract the archive so that the folder `jpx-tokyo-stock-exchange-prediction/` is placed at the project root (same level as this README)
-3. The expected structure:
+2. Extract the archive and place the `jpx-tokyo-stock-exchange-prediction/` folder **inside this `source_code/` directory** (same level as this README)
+
+The expected structure:
 
 ```
 source_code/
-├── jpx-tokyo-stock-exchange-prediction/
+├── jpx-tokyo-stock-exchange-prediction/   <-- place downloaded data here
 │   ├── train_files/
 │   │   ├── stock_prices.csv
 │   │   ├── secondary_stock_prices.csv
@@ -36,6 +37,16 @@ source_code/
 ├── evaluate.py
 └── README.md
 ```
+
+> **Note**: The dataset is ~1.2 GB and is excluded from this repository (see `.gitignore`). If you prefer to keep the data in a different location, set the environment variable before running:
+>
+> ```bash
+> # Windows
+> set JPX_DATA_DIR=C:\path\to\jpx-tokyo-stock-exchange-prediction
+>
+> # Linux / macOS
+> export JPX_DATA_DIR=/path/to/jpx-tokyo-stock-exchange-prediction
+> ```
 
 ## Quick Start
 

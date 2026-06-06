@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+from src.config import (
+    MODEL_DIR, DATA_DIR, TRAIN_DIR, SUPPLEMENT_DIR, TEST_DIR,
+)
 from src.data.loader import load_stock_list
 from src.data.preprocessor import preprocess
 from src.features.price_features import build_price_features
@@ -63,7 +66,6 @@ def update_buffer(buffer, day_df, max_window=65):
 def load_ensemble_models():
     import lightgbm as lgb
     import xgboost as xgb
-    from src.config import MODEL_DIR
 
     models = []
     model_types = []
@@ -121,3 +123,32 @@ def make_submission_iter_test(env, models, model_types, weights, feature_cols, i
 
         env.predict(sample_prediction)
         buffer = update_buffer(buffer, day_features, max_window)
+
+
+def main():
+    import sys
+    sys.path.insert(0, str(DATA_DIR))
+    from jpx_tokyo_market_prediction import make_env
+
+    print("加载模型...")
+    models, model_types, weights = load_ensemble_models()
+    if not models:
+        print("未找到训练好的模型，请先运行 run_pipeline.py")
+        return
+    print(f"已加载 {len(models)} 个模型: {model_types}")
+
+    env = make_env()
+    initial_df = pd.read_csv(TRAIN_DIR / "stock_prices.csv")
+    initial_df["Date"] = pd.to_datetime(initial_df["Date"])
+
+    sample = pd.read_csv(TEST_DIR / "stock_prices.csv", nrows=10)
+    feature_cols_sample = get_feature_columns(sample)
+    print(f"特征数: {len(feature_cols_sample)}")
+
+    print("开始提交...")
+    make_submission_iter_test(env, models, model_types, weights, feature_cols_sample, initial_df)
+    print("提交完成!")
+
+
+if __name__ == "__main__":
+    main()

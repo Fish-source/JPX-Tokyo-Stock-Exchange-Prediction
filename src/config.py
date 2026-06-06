@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT_DIR / "jpx-tokyo-stock-exchange-prediction"
+DATA_DIR = Path(os.environ.get("JPX_DATA_DIR", str(ROOT_DIR / "jpx-tokyo-stock-exchange-prediction")))
 TRAIN_DIR = DATA_DIR / "train_files"
 SUPPLEMENT_DIR = DATA_DIR / "supplemental_files"
 TEST_DIR = DATA_DIR / "example_test_files"
@@ -19,30 +19,33 @@ TRAIN_START = "2017-01-04"
 VALID_START = "2021-01-01"
 TEST_START = "2021-07-01"
 
-MOMENTUM_WINDOWS = [1, 5, 10, 20, 40, 60]
-VOL_WINDOWS = [5, 10, 20, 60]
+RETURN_WINDOWS = [1, 5, 10, 20]
+
+RIDGE_ALPHA = 100
 
 LGB_PARAMS = {
     "objective": "regression",
-    "metric": "rmse",
+    "metric": "mae",
     "learning_rate": 0.01,
     "num_leaves": 31,
-    "max_depth": 6,
-    "feature_fraction": 0.6,
-    "bagging_fraction": 0.6,
+    "feature_fraction": 0.8,
+    "bagging_fraction": 0.8,
     "bagging_freq": 1,
-    "lambda_l1": 1.0,
-    "lambda_l2": 1.0,
-    "min_child_samples": 500,
+    "min_child_samples": 100,
     "verbose": -1,
     "n_jobs": -1,
     "seed": 42,
 }
 
-LGB_FIT_PARAMS = {
-    "num_boost_round": 10000,
-    "early_stopping_rounds": 500,
-    "verbose_eval": 500,
-}
+FEATURE_CACHE_NAME = "features_v6.parquet"
 
-FEATURE_CACHE_NAME = "features_v3.parquet"
+BASE_FEATURES = [
+    "Open_z", "High_z", "Low_z", "Close_z", "Volume_z",
+    "Daily_Range_z", "Mean_z", "SupervisionFlag", "ExpectedDividend",
+]
+
+CS_RANK_FEATURES = [
+    "Return_1d_rank", "Return_5d_rank", "Return_10d_rank", "Return_20d_rank",
+    "Volatility_20d_rank", "TargetLag_1d_rank",
+    "Close_z_rank", "Volume_z_rank", "IntradayRange_rank",
+]

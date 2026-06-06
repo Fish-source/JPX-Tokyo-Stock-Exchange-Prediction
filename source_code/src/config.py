@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT_DIR / "jpx-tokyo-stock-exchange-prediction"
+DATA_DIR = Path(os.environ.get("JPX_DATA_DIR", str(ROOT_DIR / "jpx-tokyo-stock-exchange-prediction")))
 TRAIN_DIR = DATA_DIR / "train_files"
 SUPPLEMENT_DIR = DATA_DIR / "supplemental_files"
 TEST_DIR = DATA_DIR / "example_test_files"
